@@ -76,6 +76,25 @@ namespace ELFT
 		    const bool forceFromDisk)
 		    const;
 
+		/**
+		 * @brief
+		 * Obtain number of enrollment set templates loaded.
+		 *
+		 * @param inMem
+		 * Only return number of templates loaded in memory.
+		 *
+		 * @return
+		 * Number of enrollment set templates.
+		 *
+		 * @warning
+		 * **Must** call load() before this method to get an accurate
+		 * count.
+		 */
+		uint64_t
+		size(
+		    bool inMem)
+		    const;
+
 	private:
 		/** Path provided from ELFT API. */
 		const std::filesystem::path databaseDirectory{};

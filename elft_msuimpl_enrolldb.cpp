@@ -122,3 +122,14 @@ ELFT::MSUEnrollDB::load(
 		std::get<MSUEnrollDBEntry>(p).inMem = true;
 	}
 }
+
+uint64_t
+ELFT::MSUEnrollDB::size(
+    bool inMem)
+    const
+{
+	if (inMem)
+		return (this->memDB.size());
+
+	return (this->diskDB.size());
+}
