@@ -15,7 +15,6 @@ set(LIB_NAME "msu-compare")
 add_library(${LIB_NAME} SHARED)
 target_sources(${LIB_NAME} PRIVATE
 	../submodules/msu-latentafis/matching/matcher.cpp)
-target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
 # Turn on warnings
 target_compile_options(${LIB_NAME} PRIVATE
