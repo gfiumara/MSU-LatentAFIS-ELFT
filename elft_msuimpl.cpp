@@ -8,6 +8,10 @@
  * about its quality, reliability, or any other characteristic.
  */
 
+#include <filesystem>
+
+#include <matcher.h>
+
 #include <elft_msuimpl.h>
 
 ELFT::MSUExtractionImplementation::MSUExtractionImplementation(
@@ -90,9 +94,26 @@ ELFT::MSUSearchImplementation::MSUSearchImplementation(
     const std::filesystem::path &databaseDirectory) :
     ELFT::SearchInterface(),
     configurationDirectory{configurationDirectory},
-    databaseDirectory{databaseDirectory}
+    databaseDirectory{databaseDirectory},
+    algorithm{getCodebookPath(configurationDirectory,
+        "codebook_EmbeddingSize_96_stride_16_subdim_6.dat")}
 {
 	/* Do NOT load templates into RAM here */
+}
+
+std::filesystem::path
+ELFT::MSUSearchImplementation::getCodebookPath(
+    const std::filesystem::path &configurationDirectory,
+    const std::string &codebookFilename)
+{
+	const std::filesystem::path codebookFile{
+	    configurationDirectory / codebookFilename};
+	if (!std::filesystem::exists(codebookFile) ||
+	    !std::filesystem::is_regular_file(codebookFile))
+		throw std::runtime_error{"Codebook file (" + codebookFilename +
+		    " at " + codebookFile.string() + ") does not exist."};
+
+	return (codebookFile);
 }
 
 ELFT::ReturnStatus

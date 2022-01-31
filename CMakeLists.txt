@@ -54,6 +54,7 @@ target_link_libraries(${LIB_NAME} PUBLIC elft)
 add_subdirectory(${CMAKE_SOURCE_DIR}/libmsu-compare)
 add_dependencies(${LIB_NAME} msu-compare)
 target_link_libraries(${LIB_NAME} PUBLIC msu-compare)
+target_include_directories(${LIB_NAME} SYSTEM PRIVATE submodules/msu-latentafis/matching)
 
 # Turn on warnings
 target_compile_options(${LIB_NAME} PRIVATE

@@ -96,6 +96,26 @@ namespace ELFT
 	private:
 		const std::filesystem::path configurationDirectory{};
 		const std::filesystem::path databaseDirectory{};
+
+		/* MSU parameters */
+		const PQ::Matcher algorithm;
+
+		/**
+		 * @brief
+		 * Form path to codebook file.
+		 *
+		 * @param configurationDirectory
+		 * Path to ELFT configuration directory.
+		 * @param configName
+		 * Name of the configuration file.
+		 *
+		 * @return
+		 * Path to codebook.
+		 */
+		static std::filesystem::path
+		getCodebookPath(
+		    const std::filesystem::path &configurationDirectory,
+		    const std::string &codebookFilename);
 	};
 }
 
