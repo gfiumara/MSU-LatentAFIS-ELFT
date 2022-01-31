@@ -96,7 +96,8 @@ ELFT::MSUSearchImplementation::MSUSearchImplementation(
     configurationDirectory{configurationDirectory},
     databaseDirectory{databaseDirectory},
     algorithm{getCodebookPath(configurationDirectory,
-        "codebook_EmbeddingSize_96_stride_16_subdim_6.dat")}
+        "codebook_EmbeddingSize_96_stride_16_subdim_6.dat")},
+    enrollDB{databaseDirectory}
 {
 	/* Do NOT load templates into RAM here */
 }
@@ -120,6 +121,12 @@ ELFT::ReturnStatus
 ELFT::MSUSearchImplementation::load(
     const uint64_t maxSize)
 {
+	try {
+		this->enrollDB.load(maxSize, this->algorithm);
+	} catch (const std::exception &e) {
+		return {ReturnStatus::Result::Failure, e.what()};
+	}
+
 	return {};
 }
 

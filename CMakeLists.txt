@@ -41,7 +41,7 @@ endif()
 set(LIB_NAME "elft_${LIBRARY_NAME}_${LIBRARY_VERSION}")
 
 add_library(${LIB_NAME} SHARED)
-target_sources(${LIB_NAME} PRIVATE elft_msuimpl.cpp)
+target_sources(${LIB_NAME} PRIVATE elft_msuimpl.cpp elft_msuimpl_enrolldb.cpp)
 target_include_directories(${LIB_NAME} PRIVATE submodules/elft_public/elft_1_x/include)
 target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 

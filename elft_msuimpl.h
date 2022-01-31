@@ -11,6 +11,8 @@
 #ifndef ELFT_MSUIMPL_H_
 #define ELFT_MSUIMPL_H_
 
+#include <elft_msuimpl_enrolldb.h>
+
 #include <elft.h>
 
 namespace ELFT
@@ -99,6 +101,7 @@ namespace ELFT
 
 		/* MSU parameters */
 		const PQ::Matcher algorithm;
+		MSUEnrollDB enrollDB;
 
 		/**
 		 * @brief
