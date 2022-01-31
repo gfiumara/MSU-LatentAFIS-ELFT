@@ -60,10 +60,14 @@ ELFT::MSUEnrollDB::read(
 		throw std::runtime_error{"Could not read archive"};
 
 	RolledFPTemplate exemplar{};
-	algorithm.load_FP_template(buf, exemplar);
+	const auto rv = algorithm.load_FP_template(buf, exemplar);
+	if (rv < 0) {
+		exemplar.m_nrof_minu_templates = 0;
+                exemplar.m_nrof_texture_templates = 0;
+        }
+
 	return (exemplar);
 }
-
 
 void
 ELFT::MSUEnrollDB::initDiskDB()
