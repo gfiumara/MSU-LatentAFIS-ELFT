@@ -10,9 +10,6 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(elft_msuimpl)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 # Discover name and version
 # Sets LIBRARY_NAME and LIBRARY_VERSION in parent context
 function(find_name_and_version)
@@ -63,7 +60,10 @@ target_compile_options(${LIB_NAME} PRIVATE
 # Set RPATH to $ORIGIN
 set_target_properties(${LIB_NAME} PROPERTIES
     BUILD_RPATH_USE_ORIGIN TRUE
-    INSTALL_RPATH $ORIGIN)
+    INSTALL_RPATH $ORIGIN
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
 
 include(GNUInstallDirs)
 install(TARGETS ${LIB_NAME}
