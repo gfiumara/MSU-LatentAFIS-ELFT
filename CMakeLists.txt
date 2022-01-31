@@ -50,6 +50,11 @@ add_subdirectory(submodules/elft_public/elft_1_x/libelft ${CMAKE_CURRENT_BINARY_
 add_dependencies(${LIB_NAME} elft)
 target_link_libraries(${LIB_NAME} PUBLIC elft)
 
+# Depend on msu-compare
+add_subdirectory(${CMAKE_SOURCE_DIR}/libmsu-compare)
+add_dependencies(${LIB_NAME} msu-compare)
+target_link_libraries(${LIB_NAME} PUBLIC msu-compare)
+
 # Turn on warnings
 target_compile_options(${LIB_NAME} PRIVATE
    -Wall -Wextra -pedantic -Wconversion -Wsign-conversion)
