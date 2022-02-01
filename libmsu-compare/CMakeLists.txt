@@ -41,8 +41,11 @@ install(TARGETS ${LIB_NAME}
 find_package(Eigen3 REQUIRED)
 target_link_libraries(${LIB_NAME} PRIVATE Eigen3::Eigen)
 
-find_package(OpenMP REQUIRED)
-target_link_libraries(${LIB_NAME} PRIVATE OpenMP::OpenMP_CXX)
+# OpenMP not required
+find_package(OpenMP)
+if (TARGET OpenMP::OpenMP_CXX)
+	target_link_libraries(${LIB_NAME} PRIVATE OpenMP::OpenMP_CXX)
+endif()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 target_link_libraries(${LIB_NAME} PRIVATE Boost::system Boost::filesystem)
