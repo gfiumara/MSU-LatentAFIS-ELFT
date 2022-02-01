@@ -42,9 +42,14 @@ find_package(Eigen3 REQUIRED)
 target_link_libraries(${LIB_NAME} PRIVATE Eigen3::Eigen)
 
 # OpenMP not required
-find_package(OpenMP)
-if (TARGET OpenMP::OpenMP_CXX)
-	target_link_libraries(${LIB_NAME} PRIVATE OpenMP::OpenMP_CXX)
+option(WITH_OPENMP "Use OpenMP" OFF)
+if (WITH_OPENMP)
+	find_package(OpenMP)
+	if (TARGET OpenMP::OpenMP_CXX)
+		target_link_libraries(${LIB_NAME} PRIVATE OpenMP::OpenMP_CXX)
+	elseif (WITH_OPENMP)
+		message(FATAL_ERROR "OpenMP requested, but not found")
+	endif()
 endif()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem)
