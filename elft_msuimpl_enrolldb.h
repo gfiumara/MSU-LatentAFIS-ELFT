@@ -95,6 +95,15 @@ namespace ELFT
 		    bool inMem)
 		    const;
 
+		/*
+		 * Trivial iteration over the list of keys/offsets.
+		 */
+
+		/** First enrollment set entry */
+		auto begin() const { return (this->diskDB.begin()); }
+		/** Last enrollment set entry */
+		auto end() const { return (this->diskDB.end()); }
+
 	private:
 		/** Path provided from ELFT API. */
 		const std::filesystem::path databaseDirectory{};
