@@ -52,6 +52,6 @@ if (WITH_OPENMP)
 	endif()
 endif()
 
-find_package(Boost REQUIRED COMPONENTS system filesystem)
-target_link_libraries(${LIB_NAME} PRIVATE Boost::system Boost::filesystem)
+find_package(Boost REQUIRED COMPONENTS filesystem)
+target_link_libraries(${LIB_NAME} PRIVATE Boost::filesystem)
 
