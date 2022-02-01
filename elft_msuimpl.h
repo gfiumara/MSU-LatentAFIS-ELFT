@@ -119,6 +119,15 @@ namespace ELFT
 		getCodebookPath(
 		    const std::filesystem::path &configurationDirectory,
 		    const std::string &codebookFilename);
+
+		/** Comparison object (for sorting results) */
+		struct EntrySorter
+		{
+			bool operator()(
+			    const std::pair<std::string, float> &a,
+			    const std::pair<std::string, float> &b)
+			    const;
+		};
 	};
 }
 

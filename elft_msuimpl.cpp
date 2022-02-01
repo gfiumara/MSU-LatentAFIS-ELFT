@@ -146,9 +146,94 @@ ELFT::MSUSearchImplementation::search(
     const uint16_t maxCandidates)
     const
 {
+	/*
+	 * Re-implementation of relevant parts of Matcher::One2List_matching
+	 */
+
+	/* Convert to vector<uint8_t> (MSU is C++11. Likely fine, but safety) */
+	std::vector<uint8_t> latent_uint8{};
+	latent_uint8.reserve(probeTemplate.size());
+	std::transform(probeTemplate.cbegin(), probeTemplate.cend(),
+	    std::back_inserter(latent_uint8),
+	    [](const std::byte b) -> uint8_t {
+		return (static_cast<uint8_t>(b));
+	});
+
+	/* Parse template */
+	LatentFPTemplate latent{};
+	this->algorithm.load_FP_template(latent_uint8, latent);
+	if ((latent.m_nrof_minu_templates <= 0) &&
+	    (latent.m_nrof_texture_templates <= 0)) {
+		ELFT::SearchResult result{};
+		result.decision = false;
+		result.status = {ReturnStatus::Result::Failure,
+		    "Template has no minutiae"};
+		return (result);
+	}
+
+	/* Compare every single template */
+	std::vector<std::pair<std::string, float>> scores{};
+	scores.reserve(maxCandidates);
+	for (const auto &exemplarEntry : this->enrollDB) {
+		const auto exemplar = this->enrollDB.read(
+		    std::get<const std::string>(exemplarEntry),
+		    this->algorithm, false);
+
+		std::vector<float> score{};
+		score.reserve(28);
+		const auto result = this->algorithm.
+		    One2One_matching_selected_templates(latent, exemplar,
+		    score);
+		if (result == 1) {
+			/* Latent template is empty */
+			continue;
+		} else if (result == 2) {
+			/* Exemplar template is empty */
+			continue;
+		}
+
+		/*
+		 * Instead of storing hundreds of thousands of scores, we are
+		 * only storing the top `maxCandidates` scores.
+		 */
+		const float finalScore{score[0] + score[1] + score[2] +
+		    score[28]*0.3f};
+		if (scores.size() < maxCandidates) {
+			scores.emplace_back(
+			    std::get<const std::string>(exemplarEntry),
+			    finalScore);
+		} else {
+			std::sort(scores.begin(), scores.end(), EntrySorter());
+			if (std::get<float>(scores.back()) < finalScore) {
+				scores.pop_back();
+				scores.emplace_back(
+				    std::get<const std::string>(exemplarEntry),
+				    finalScore);
+			}
+		}
+	}
+
 	ELFT::SearchResult result{};
-	result.candidateList.reserve(maxCandidates);
-	result.decision = false;
+	if (scores.empty()) {
+		result.status = {ReturnStatus::Result::Failure,
+		    "No scores generated"};
+		result.decision = false;
+		return (result);
+	}
+
+	/* Return top scores */
+	result.candidateList.reserve(scores.size());
+	for (const auto &entry : scores) {
+		result.candidateList.emplace_back(
+		    std::get<std::string>(entry),
+		    ELFT::FrictionRidgeGeneralizedPosition::UnknownFinger,// XXX
+		    std::get<float>(entry));
+	}
+
+	/* TODO: Find threshold */
+	static const float decisionThreshold{0};
+	result.decision = (std::get<float>(scores.front()) >=
+	    decisionThreshold);
 
 	return (result);
 }
@@ -170,3 +255,12 @@ ELFT::SearchInterface::getImplementation(
 	return (std::make_shared<MSUSearchImplementation>(
 	    configurationDirectory, databaseDirectory));
 }
+
+bool
+ELFT::MSUSearchImplementation::EntrySorter::operator()(
+    const std::pair<std::string, float> &a,
+    const std::pair<std::string, float> &b)
+    const
+{
+	return (std::get<float>(a) > std::get<float>(b));
+};
