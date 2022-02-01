@@ -8,6 +8,7 @@
  * about its quality, reliability, or any other characteristic.
  */
 
+#include <filesystem>
 #include <unordered_map>
 
 #include <matcher.h>

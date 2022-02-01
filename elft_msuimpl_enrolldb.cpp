@@ -99,13 +99,15 @@ ELFT::MSUEnrollDB::load(
 	const auto numTmpls{this->diskDB.size()};
 
 	std::intmax_t remainingBytes{};
-	if (maxMemoryUsage > std::numeric_limits<std::intmax_t>::max())
+	if (static_cast<std::intmax_t>(maxMemoryUsage) >
+	    std::numeric_limits<std::intmax_t>::max())
 		remainingBytes = std::numeric_limits<std::intmax_t>::max();
 	else
 		remainingBytes = static_cast<std::intmax_t>(maxMemoryUsage);
 
 	/* Rough initial assumption */
-	remainingBytes -= (sizeof(decltype(this->memDB)) +
+	remainingBytes -= static_cast<decltype(remainingBytes)>(
+	    sizeof(decltype(this->memDB)) +
 	    (numTmpls * sizeof(std::string)) +
 	    (numTmpls * sizeof(MSUEnrollDBEntry)));
 

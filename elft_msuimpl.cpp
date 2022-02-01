@@ -8,6 +8,7 @@
  * about its quality, reliability, or any other characteristic.
  */
 
+#include <algorithm>
 #include <filesystem>
 
 #include <matcher.h>
@@ -263,4 +264,4 @@ ELFT::MSUSearchImplementation::EntrySorter::operator()(
     const
 {
 	return (std::get<float>(a) > std::get<float>(b));
-};
+}
