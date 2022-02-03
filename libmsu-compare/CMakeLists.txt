@@ -23,13 +23,19 @@ target_compile_options(${LIB_NAME} PRIVATE
 target_compile_options(${LIB_NAME} PRIVATE
 	-Wno-unused-parameter)
 
-# Set RPATH to $ORIGIN
 set_target_properties(${LIB_NAME} PROPERTIES
+	# Set RPATH to $ORIGIN
 	BUILD_RPATH_USE_ORIGIN TRUE
 	INSTALL_RPATH $ORIGIN
 	CXX_STANDARD 11
 	CXX_STANDARD_REQUIRED ON
 )
+
+# Use RUNPATH over RPATH
+if(NOT APPLE)
+	set_target_properties(${LIB_NAME} PROPERTIES
+	    LINK_FLAGS -Wl,--enable-new-dtags)
+endif()
 
 include(GNUInstallDirs)
 install(TARGETS ${LIB_NAME}
