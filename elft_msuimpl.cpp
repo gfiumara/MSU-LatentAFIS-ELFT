@@ -147,6 +147,14 @@ ELFT::MSUSearchImplementation::search(
     const uint16_t maxCandidates)
     const
 {
+	if (probeTemplate.empty()) {
+		ELFT::SearchResult result{};
+		result.decision = false;
+		result.status = {ReturnStatus::Result::Failure,
+		    "Template is empty"};
+		return (result);
+	}
+
 	/*
 	 * Re-implementation of relevant parts of Matcher::One2List_matching
 	 */
