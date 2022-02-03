@@ -79,7 +79,7 @@ ELFT::MSUEnrollDB::initDiskDB()
 	std::string key{};
 	MSUEnrollDBEntry entry{};
 	while (!manifest) {
-		manifest >> key >> entry.offset >> entry.length;
+		manifest >> key >> entry.length >> entry.offset;
 
 		this->diskDB[key] = entry;
 	}
