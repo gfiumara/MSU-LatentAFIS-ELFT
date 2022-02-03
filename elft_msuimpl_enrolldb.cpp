@@ -76,7 +76,7 @@ ELFT::MSUEnrollDB::initDiskDB()
 	if (!manifest)
 		throw std::runtime_error{"Could not open manifest"};
 
-	std::string key{}, offset{}, size{};
+	std::string key{};
 	MSUEnrollDBEntry entry{};
 	while (!manifest) {
 		manifest >> key >> entry.offset >> entry.length;
