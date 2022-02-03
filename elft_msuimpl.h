@@ -21,7 +21,7 @@ namespace ELFT
 	{
 		uint16_t versionNumber{0x0001};
 		uint16_t productOwner{0x000F};
-		std::string libraryIdentifier{"MSU-LatentAFIS"};
+		std::string libraryIdentifier{"MSULatentAFIS"};
 	}
 
 	class MSUExtractionImplementation : public ExtractionInterface
