@@ -202,7 +202,6 @@ ELFT::MSUSearchImplementation::search(
 		}
 
 		std::vector<float> score{};
-		score.reserve(28);
 		const auto result = this->algorithm.
 		    One2One_matching_selected_templates(latent, exemplar,
 		    score);
