@@ -109,8 +109,14 @@ ELFT::MSUEnrollDB::load(
 			break;
 
 		/* Still room in RAM. Read this template. */
-		this->memDB[std::get<const std::string>(p)] =
-		    this->read(std::get<const std::string>(p), algorithm, true);
+		try {
+			this->memDB[std::get<const std::string>(p)] =
+			    this->read(std::get<const std::string>(p),
+			    algorithm, true);
+		} catch (const std::exception &) {
+			/* Can't parse template. Skip */
+			continue;
+		}
 		std::get<MSUEnrollDBEntry>(p).inMem = true;
 	}
 }
