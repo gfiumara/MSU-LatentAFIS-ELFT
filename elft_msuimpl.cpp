@@ -170,7 +170,14 @@ ELFT::MSUSearchImplementation::search(
 
 	/* Parse template */
 	LatentFPTemplate latent{};
-	this->algorithm.load_FP_template(latent_uint8, latent);
+	try {
+		this->algorithm.load_FP_template(latent_uint8, latent);
+	} catch (const std::exception &e) {
+		ELFT::SearchResult result{};
+		result.decision = false;
+		result.status = {ReturnStatus::Result::Failure, e.what()};
+		return (result);
+	}
 	if ((latent.m_nrof_minu_templates <= 0) &&
 	    (latent.m_nrof_texture_templates <= 0)) {
 		ELFT::SearchResult result{};
@@ -184,9 +191,15 @@ ELFT::MSUSearchImplementation::search(
 	std::vector<std::pair<std::string, float>> scores{};
 	scores.reserve(maxCandidates);
 	for (const auto &exemplarEntry : this->enrollDB) {
-		const auto exemplar = this->enrollDB.read(
-		    std::get<const std::string>(exemplarEntry),
-		    this->algorithm, false);
+		RolledFPTemplate exemplar;
+		try {
+			exemplar = this->enrollDB.read(
+			    std::get<const std::string>(exemplarEntry),
+			    this->algorithm, false);
+		} catch (const std::exception &) {
+			/* Can't load template, skip */
+			continue;
+		}
 
 		std::vector<float> score{};
 		score.reserve(28);

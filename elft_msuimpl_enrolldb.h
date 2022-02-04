@@ -68,7 +68,7 @@ namespace ELFT
 		 * MSU exemplar template.
 		 *
 		 * @throw std::runtime_exception
-		 * `key` does not exist.
+		 * `key` does not exist or issue parsing template.
 		 */
 		RolledFPTemplate
 		read(
