@@ -21,7 +21,7 @@ target_compile_options(${LIB_NAME} PRIVATE
 	-Wall -Wextra -pedantic)
 # Turn off unused variable warning
 target_compile_options(${LIB_NAME} PRIVATE
-	-Wno-unused-parameter)
+	-Wno-unused-parameter -Wno-unused-variable -Wno-sign-compare)
 
 set_target_properties(${LIB_NAME} PROPERTIES
 	# Set RPATH to $ORIGIN
