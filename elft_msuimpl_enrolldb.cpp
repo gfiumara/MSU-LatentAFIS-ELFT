@@ -101,8 +101,8 @@ ELFT::MSUEnrollDB::load(
 	    (numTmpls * sizeof(std::string)) +
 	    (numTmpls * sizeof(MSUEnrollDBEntry)));
 
-	for (auto &p : this->diskDB) {
-		remainingBytes -= std::get<MSUEnrollDBEntry>(p).length;
+	for (auto &[key, entry] : this->diskDB) {
+		remainingBytes -= entry.length;
 		remainingBytes -= sizeof(std::string);
 
 		/* Can't fit anything more in RAM, stop loading. */
@@ -111,14 +111,12 @@ ELFT::MSUEnrollDB::load(
 
 		/* Still room in RAM. Read this template. */
 		try {
-			this->memDB[std::get<const std::string>(p)] =
-			    this->read(std::get<const std::string>(p),
-			    algorithm, true);
+			this->memDB[key] = this->read(key, algorithm, true);
 		} catch (const std::exception &) {
 			/* Can't parse template. Skip */
 			continue;
 		}
-		std::get<MSUEnrollDBEntry>(p).inMem = true;
+		entry.inMem = true;
 	}
 }
 
