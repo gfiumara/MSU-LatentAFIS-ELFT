@@ -104,8 +104,9 @@ ELFT::MSUEnrollDB::load(
 	for (auto &[key, entry] : this->diskDB) {
 		/* Assume data structure uses 1.2x on-disk storage */
 		remainingBytes -= static_cast<std::streamoff>(std::ceil(
-		    1.2 * entry.length));
-		remainingBytes -= sizeof(std::string);
+		    1.2 * static_cast<float>(entry.length)));
+		remainingBytes -= static_cast<decltype(remainingBytes)>(
+		    sizeof(std::string);
 
 		/* Can't fit anything more in RAM, stop loading. */
 		if (remainingBytes <= 0)
