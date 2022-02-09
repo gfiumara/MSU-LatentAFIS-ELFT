@@ -97,12 +97,13 @@ ELFT::MSUEnrollDB::load(
 
 	/* Rough initial assumption */
 	remainingBytes -= static_cast<decltype(remainingBytes)>(
-	    sizeof(decltype(this->memDB)) +
+	    sizeof(decltype(this->diskDB)) +
 	    (numTmpls * sizeof(std::string)) +
 	    (numTmpls * sizeof(MSUEnrollDBEntry)));
 
 	for (auto &p : this->diskDB) {
 		remainingBytes -= std::get<MSUEnrollDBEntry>(p).length;
+		remainingBytes -= sizeof(std::string);
 
 		/* Can't fit anything more in RAM, stop loading. */
 		if (remainingBytes <= 0)
