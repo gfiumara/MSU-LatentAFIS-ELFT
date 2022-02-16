@@ -106,7 +106,7 @@ ELFT::MSUEnrollDB::load(
 		remainingBytes -= static_cast<std::streamoff>(std::ceil(
 		    1.2 * static_cast<float>(entry.length)));
 		remainingBytes -= static_cast<decltype(remainingBytes)>(
-		    sizeof(std::string);
+		    sizeof(std::string));
 
 		/* Can't fit anything more in RAM, stop loading. */
 		if (remainingBytes <= 0)
