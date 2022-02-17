@@ -212,20 +212,18 @@ ELFT::MSUSearchImplementation::search(
 	/* Compare every single template */
 	std::vector<std::pair<std::string, float>> scores{};
 	scores.reserve(maxCandidates);
-	for (const auto &exemplarEntry : this->enrollDB) {
+	for (const auto &[key, entry] : this->enrollDB) {
 #ifdef NDEBUG
 		if ((++i % 1000) == 0) {
 			log << "Time: " << currentTime() <<
-			    ", Entry: " << i << ", Exemplar: " <<
-			    std::get<const std::string>(exemplarEntry) <<
+			    ", Entry: " << i << ", Exemplar: " << key <<
 			    std::endl;
 		}
 #endif
 		RolledFPTemplate exemplar;
 		try {
-			exemplar = this->enrollDB.read(
-			    std::get<const std::string>(exemplarEntry),
-			    this->algorithm, false);
+			exemplar = this->enrollDB.read(key, this->algorithm,
+			    false);
 		} catch (const std::exception &) {
 			/* Can't load template, skip */
 			continue;
@@ -250,16 +248,12 @@ ELFT::MSUSearchImplementation::search(
 		const float finalScore{score[0] + score[1] + score[2] +
 		    score[28]*0.3f};
 		if (scores.size() < maxCandidates) {
-			scores.emplace_back(
-			    std::get<const std::string>(exemplarEntry),
-			    finalScore);
+			scores.emplace_back(key, finalScore);
 		} else {
 			std::sort(scores.begin(), scores.end(), EntrySorter());
 			if (std::get<float>(scores.back()) < finalScore) {
 				scores.pop_back();
-				scores.emplace_back(
-				    std::get<const std::string>(exemplarEntry),
-				    finalScore);
+				scores.emplace_back(key, finalScore);
 			}
 		}
 	}
