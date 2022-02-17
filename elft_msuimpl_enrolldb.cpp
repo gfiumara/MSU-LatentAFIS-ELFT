@@ -82,6 +82,10 @@ ELFT::MSUEnrollDB::load(
     const uint64_t maxMemoryUsage,
     const PQ::Matcher &algorithm)
 {
+	static bool loaded{false};
+	if (loaded)
+		return;
+
 	/* Load all offsets */
 	this->initDiskDB();
 
@@ -121,6 +125,8 @@ ELFT::MSUEnrollDB::load(
 		}
 		entry.inMem = true;
 	}
+
+	loaded = true;
 }
 
 uint64_t
