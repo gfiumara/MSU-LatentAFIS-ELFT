@@ -35,6 +35,9 @@ namespace ELFT
 	public:
 		MSUEnrollDB(
 		    const std::filesystem::path &databaseDirectory);
+		MSUEnrollDB& operator=(const MSUEnrollDB&) = delete;
+		MSUEnrollDB(const MSUEnrollDB&) = delete;
+		~MSUEnrollDB() = default;
 
 		/**
 		 * @brief
