@@ -73,7 +73,7 @@ namespace ELFT
 		 * @throw std::runtime_exception
 		 * `key` does not exist or issue parsing template.
 		 */
-		RolledFPTemplate
+		const RolledFPTemplate
 		read(
 		    const std::string &key,
 		    const PQ::Matcher &algorithm,
@@ -114,7 +114,7 @@ namespace ELFT
 		/** List of all keys and how to read. */
 		std::unordered_map<std::string, MSUEnrollDBEntry> diskDB{};
 		/** Partial database read into memory. */
-		std::unordered_map<std::string, RolledFPTemplate> memDB{};
+		std::unordered_map<std::string, const RolledFPTemplate> memDB{};
 
 		/** Initialize MSUEnrollDB.diskDB. */
 		void

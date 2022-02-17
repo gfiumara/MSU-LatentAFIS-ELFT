@@ -19,7 +19,7 @@ ELFT::MSUEnrollDB::MSUEnrollDB(
 
 }
 
-RolledFPTemplate
+const RolledFPTemplate
 ELFT::MSUEnrollDB::read(
     const std::string &key,
     const PQ::Matcher &algorithm,
@@ -118,7 +118,8 @@ ELFT::MSUEnrollDB::load(
 
 		/* Still room in RAM. Read this template. */
 		try {
-			this->memDB[key] = this->read(key, algorithm, true);
+			this->memDB.emplace(key,
+			    this->read(key, algorithm, true));
 		} catch (const std::exception &) {
 			/* Can't parse template. Skip */
 			continue;
