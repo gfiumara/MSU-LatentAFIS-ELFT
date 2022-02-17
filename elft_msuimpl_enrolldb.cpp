@@ -102,9 +102,9 @@ ELFT::MSUEnrollDB::load(
 	    (numTmpls * sizeof(MSUEnrollDBEntry)));
 
 	for (auto &[key, entry] : this->diskDB) {
-		/* Assume data structure uses 1.2x on-disk storage */
+		/* Assume data structure uses 2x on-disk storage */
 		remainingBytes -= static_cast<std::streamoff>(std::ceil(
-		    1.2 * static_cast<float>(entry.length)));
+		    2 * static_cast<float>(entry.length)));
 		remainingBytes -= static_cast<decltype(remainingBytes)>(
 		    sizeof(std::string));
 
