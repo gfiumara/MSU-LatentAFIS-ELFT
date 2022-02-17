@@ -15,6 +15,23 @@
 
 #include <elft_msuimpl.h>
 
+#ifdef NDEBUG
+#include <chrono>
+#include <fstream>
+
+#include <unistd.h>
+
+static std::string currentTime()
+{
+	const auto time = std::chrono::system_clock::to_time_t(
+	    std::chrono::system_clock::now());
+	std::string s = std::ctime(&time);
+	s.pop_back();
+	return (s);
+}
+
+#endif /* NDEBUG */
+
 ELFT::MSUExtractionImplementation::MSUExtractionImplementation(
     const std::filesystem::path &configurationDirectory) :
     ELFT::ExtractionInterface(),
@@ -187,10 +204,23 @@ ELFT::MSUSearchImplementation::search(
 		return (result);
 	}
 
+#ifdef NDEBUG
+	std::ofstream log{"/tmp/elft-" + std::to_string(getpid())};
+	uint64_t i{0};
+#endif
+
 	/* Compare every single template */
 	std::vector<std::pair<std::string, float>> scores{};
 	scores.reserve(maxCandidates);
 	for (const auto &exemplarEntry : this->enrollDB) {
+#ifdef NDEBUG
+		if ((++i % 1000) == 0) {
+			log << "Time: " << currentTime() <<
+			    ", Entry: " << i << ", Exemplar: " <<
+			    std::get<const std::string>(exemplarEntry) <<
+			    std::endl;
+		}
+#endif
 		RolledFPTemplate exemplar;
 		try {
 			exemplar = this->enrollDB.read(
@@ -234,6 +264,10 @@ ELFT::MSUSearchImplementation::search(
 		}
 	}
 
+#ifdef NDEBUG
+	log << "Time: " << currentTime() << ", Finished" << std::endl;
+#endif
+
 	ELFT::SearchResult result{};
 	if (scores.empty()) {
 		result.status = {ReturnStatus::Result::Failure,
@@ -255,6 +289,10 @@ ELFT::MSUSearchImplementation::search(
 	static const float decisionThreshold{0};
 	result.decision = (std::get<float>(scores.front()) >=
 	    decisionThreshold);
+
+#ifdef NDEBUG
+	log << "Time: " << currentTime() << ", Returning" << std::endl;
+#endif
 
 	return (result);
 }
