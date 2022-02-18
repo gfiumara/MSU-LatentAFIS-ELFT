@@ -105,7 +105,7 @@ ELFT::MSUEnrollDB::load(
 
 	for (auto &[key, entry] : this->diskDB) {
 		static const decltype(remainingBytes) AvgTmplSize{6000000 +
-		    static_cast<decltype(remainingBytes)>(sizeof(std::string))}
+		    static_cast<decltype(remainingBytes)>(sizeof(std::string))};
 		remainingBytes -= AvgTmplSize;
 
 		/* Can't fit anything more in RAM, stop loading. */
