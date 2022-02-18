@@ -59,9 +59,7 @@ ELFT::MSUEnrollDB::read(
 	if (!archive)
 		throw std::runtime_error{"Could not read archive"};
 
-	RolledFPTemplate exemplar{};
-	algorithm.load_FP_template(buf, exemplar);
-	return (exemplar);
+	return (algorithm.load_rolled_template(buf));
 }
 
 void

@@ -188,15 +188,15 @@ ELFT::MSUSearchImplementation::search(
 	/* Parse template */
 	LatentFPTemplate latent{};
 	try {
-		this->algorithm.load_FP_template(latent_uint8, latent);
+		latent = this->algorithm.load_latent_template(latent_uint8);
 	} catch (const std::exception &e) {
 		ELFT::SearchResult result{};
 		result.decision = false;
 		result.status = {ReturnStatus::Result::Failure, e.what()};
 		return (result);
 	}
-	if ((latent.m_nrof_minu_templates <= 0) &&
-	    (latent.m_nrof_texture_templates <= 0)) {
+	if ((latent.m_minu_templates.size() <= 0) &&
+	    (latent.m_texture_templates.size() <= 0)) {
 		ELFT::SearchResult result{};
 		result.decision = false;
 		result.status = {ReturnStatus::Result::Failure,
