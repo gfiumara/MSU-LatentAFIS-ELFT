@@ -1,6 +1,6 @@
 [submodule "submodules/msu-latentafis"]
 	path = submodules/msu-latentafis
-	url = git@gitlab.nist.gov:774_03/finger/msu-latentafis.git
+	url = https://github.com/gfiumara/msu-latentafis
 [submodule "submodules/elft_public"]
 	path = submodules/elft_public
 	url = https://github.com/usnistgov/elft
