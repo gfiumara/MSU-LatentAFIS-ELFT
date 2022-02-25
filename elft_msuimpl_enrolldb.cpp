@@ -59,9 +59,7 @@ ELFT::MSUEnrollDB::read(
 	if (!archive)
 		throw std::runtime_error{"Could not read archive"};
 
-	RolledFPTemplate exemplar{};
-	algorithm.load_FP_template(buf, exemplar);
-	return (exemplar);
+	return (algorithm.load_rolled_template(buf));
 }
 
 void
@@ -106,11 +104,9 @@ ELFT::MSUEnrollDB::load(
 	    (numTmpls * sizeof(MSUEnrollDBEntry)));
 
 	for (auto &[key, entry] : this->diskDB) {
-		/* Assume data structure uses 2x on-disk storage */
-		remainingBytes -= static_cast<std::streamoff>(std::ceil(
-		    2 * static_cast<float>(entry.length)));
-		remainingBytes -= static_cast<decltype(remainingBytes)>(
-		    sizeof(std::string));
+		static const decltype(remainingBytes) AvgTmplSize{6000000 +
+		    static_cast<decltype(remainingBytes)>(sizeof(std::string))};
+		remainingBytes -= AvgTmplSize;
 
 		/* Can't fit anything more in RAM, stop loading. */
 		if (remainingBytes <= 0)
